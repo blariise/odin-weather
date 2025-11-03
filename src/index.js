@@ -1,5 +1,6 @@
 import "./styles.css";
 import fetchWeather from "./weather.js";
+import createDayDOM from "./dom.js";
 
 (async () => {
   const search = document.querySelector(".search input");
@@ -14,7 +15,9 @@ import fetchWeather from "./weather.js";
 })();
 
 function renderWeatherData(weatherData) {
+  const xd = createDayDOM();
+  const c = document.querySelector(".weather-container");
+  c.appendChild(xd);
   console.log(weatherData);
 }
-
 
