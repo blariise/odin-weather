@@ -61,3 +61,55 @@
   outline: none;
 }
 
+.simple-info .icon {
+  width: 3rem;
+}
+
+.weather-container {
+  display: flex;
+  justify-content: center;
+}
+
+.day-card {
+  display: grid;
+  margin-top: 3rem;
+  border: 1px solid red;
+  width: 50%;
+}
+
+.upper-card {
+  display: grid;
+  grid-template-columns: max-content 1fr 1fr;
+  grid-template-rows: 1fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  align-items: center;
+}
+
+.simple-info {
+  grid-area: 1 / 1 / 2 / 2;
+}
+
+.place {
+  grid-area: 1 / 2 / 2 / 4;  
+}
+
+.info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  border: 1px solid blue;
+}
+
+.carousel {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid green;
+}
+
+.carousel-element {
+  height: 3rem;
+  border: 1px solid green;
+}
