@@ -10,8 +10,10 @@ import createCardDOM from "./dom.js";
       weatherData = await fetchWeather(search.value);
       search.value = "";
       console.log(weatherData);
-      renderCardDOM();
-      renderWeatherData(weatherData.currentConditions, weatherData.resolvedAddress);
+      const cardDOM = renderCardDOM();
+      cardDOM.style.visibility = "hidden";
+      await renderWeatherData(weatherData.currentConditions, weatherData.resolvedAddress);
+      cardDOM.style.visibility = "visible";
     }
   });
 })();
@@ -26,15 +28,20 @@ function clearCardDOM() {
 function renderCardDOM() {
   clearCardDOM();
   const weatherContainer = document.querySelector(".weather-container");
-  weatherContainer.appendChild(createCardDOM());
+  const cardDOM = createCardDOM();
+  cardDOM.style.visibility = "hidden";
+
+  weatherContainer.appendChild(cardDOM);
+  return cardDOM;
 }
 
-function renderUpperCard(weatherData, place) {
+async function renderUpperCard(weatherData, place) {
+
+  await setUpperCardBackgroundGif(weatherData.icon);
+  await setUpperCardIcon(weatherData.icon);
+
   const dateDiv = document.querySelector(".date");
   dateDiv.innerText = weatherData.datetime;
-
-  setUpperCardBackgroundGif(weatherData.icon);
-  setUpperCardIcon(weatherData.icon);
 
   const temperature = document.querySelector(".temperature");
   temperature.innerText = `${weatherData.temp} °C`;
@@ -43,7 +50,7 @@ function renderUpperCard(weatherData, place) {
   placeDiv.innerText = place;
 }
 
-function renderInfo(weatherData) {
+async function renderInfo(weatherData) {
   const elements = document.querySelectorAll(".info-value");
   const titles = [
     "Relative humidity",
@@ -93,9 +100,9 @@ function renderInfo(weatherData) {
   });
 }
 
-function renderWeatherData(weatherData, place) {
-  renderUpperCard(weatherData, place);
-  renderInfo(weatherData);
+async function renderWeatherData(weatherData, place) {
+  await renderUpperCard(weatherData, place);
+  await renderInfo(weatherData);
 }
 
 async function dynamicImport(weatherStatus, extension) {
@@ -103,9 +110,21 @@ async function dynamicImport(weatherStatus, extension) {
   return element.default;
 }
 
+async function preloadGif(weatherStatus) {
+  const gifUrl = await dynamicImport(weatherStatus, "gif");
+
+  await new Promise((resolve, reject) => {
+    const img = document.createElement("img");
+    img.src = gifUrl;
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+  });
+  return gifUrl;
+}
+
 async function setUpperCardBackgroundGif(weatherStatus) {
   const upperCard = document.querySelector(".upper-card");
-  const background = await dynamicImport(weatherStatus, "gif");
+  const background = await preloadGif(`optimized_${weatherStatus}`);
   upperCard.style.backgroundImage = `url("${background}")`;
   upperCard.style.backgroundSize = "cover";
 }
