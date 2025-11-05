@@ -16,7 +16,15 @@ import createCardDOM from "./dom.js";
   });
 })();
 
+function clearCardDOM() {
+  const cardDiv = document.querySelector(".day-card");
+  if (cardDiv) {
+    cardDiv.remove();
+  }
+}
+
 function renderCardDOM() {
+  clearCardDOM();
   const weatherContainer = document.querySelector(".weather-container");
   weatherContainer.appendChild(createCardDOM());
 }
@@ -76,11 +84,10 @@ function renderInfo(weatherData) {
     const valueDiv = element.querySelector(".value");
     titleDiv.innerText = titles[index];
     const value = weatherData[element.dataset.key];
-    console.log(value);
     if (value === null) {
       valueDiv.innerText = "-";
     } else {
-      valueDiv.innerText = `${value} ${units[index]}`;
+      valueDiv.innerText = `${value}${units[index]}`;
     }
     ++index;
   });
