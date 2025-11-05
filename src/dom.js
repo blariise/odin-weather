@@ -47,50 +47,28 @@ function createInfoDOM() {
   const infoDiv = document.createElement("div");
   infoDiv.className = "info";
 
-  const relativeHumidity = document.createElement("div");
-  relativeHumidity.className = "relative-humidity";
-  const cloudCover = document.createElement("div");
-  cloudCover.className = "cloud-cover";
-  const visibility = document.createElement("div");
-  visibility.className = "visibility";
-  const precipitation = document.createElement("div");
-  precipitation.className = "precipitation";
-  const precipitationChance = document.createElement("div");
-  precipitationChance.className = "precipitation-chance";
-  const precipitationType = document.createElement("div");
-  precipitationType.className = "precipitation-type";
-  const snowfall = document.createElement("div");
-  snowfall.className = "snowfall";
-  const snowDepth = document.createElement("div");
-  snowDepth.className = "snow-depth";
-  const windSpeed = document.createElement("div");
-  windSpeed.className = "wind-speed";
-  const windGust = document.createElement("div");
-  windGust.className = "wind-gust";
-  const windDirection = document.createElement("div");
-  windDirection.className = "wind-direction";
-  const solarRadiation = document.createElement("div");
-  solarRadiation.className = "solar-radiation";
-  const solarEnergy = document.createElement("div");
-  solarEnergy.className = "solar-energy";
-  const uvIndex = document.createElement("div");
-  uvIndex.className = "uv-index";
+  const values = [
+    "relative-humidity",
+    "cloud-cover",
+    "visibility",
+    "precipitation",
+    "precipitation-chance",
+    "precipitation-type",
+    "snowfall",
+    "snow-depth",
+    "wind-speed",
+    "wind-gust",
+    "wind-direction",
+    "solar-radiation",
+    "solar-energy",
+    "uv-index"
+  ];
 
-  infoDiv.appendChild(relativeHumidity);
-  infoDiv.appendChild(cloudCover);
-  infoDiv.appendChild(visibility);
-  infoDiv.appendChild(precipitation);
-  infoDiv.appendChild(precipitationChance);
-  infoDiv.appendChild(precipitationType);
-  infoDiv.appendChild(snowfall);
-  infoDiv.appendChild(snowDepth);
-  infoDiv.appendChild(windSpeed);
-  infoDiv.appendChild(windGust);
-  infoDiv.appendChild(windDirection);
-  infoDiv.appendChild(solarRadiation);
-  infoDiv.appendChild(solarEnergy);
-  infoDiv.appendChild(uvIndex);
-
+  values.forEach((value) => {
+    const element = document.createElement("div");
+    element.className = `info-value ${value}`;
+    infoDiv.appendChild(element);
+  });
   return infoDiv;
 }
 
@@ -103,7 +81,6 @@ function createCarouselDOM() {
     carouselElement.className = "carousel-element";
     carouselDiv.appendChild(carouselElement);
   }
-
   return carouselDiv;
 }
 
