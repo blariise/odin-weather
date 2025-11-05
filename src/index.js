@@ -25,14 +25,11 @@ function renderUpperCard(weatherData, place) {
   const dateDiv = document.querySelector(".date");
   dateDiv.innerText = weatherData.datetime;
 
-  const iconDiv = document.querySelector(".icon");
-  import(`./${weatherData.icon}.svg`).then((module) => {
-    const icon = module.default;
-    iconDiv.innerHTML = icon;
-  });
+  setUpperCardBackgroundGif(weatherData.icon);
+  setUpperCardIcon(weatherData.icon);
 
   const temperature = document.querySelector(".temperature");
-  temperature.innerText = weatherData.temp;
+  temperature.innerText = `${weatherData.temp} °C`;
 
   const placeDiv = document.querySelector(".place");
   placeDiv.innerText = place;
@@ -75,3 +72,21 @@ function renderWeatherData(weatherData, place) {
   renderInfo(weatherData);
 }
 
+async function dynamicImport(weatherStatus, extension) {
+  const element = await import(`./assets/${weatherStatus}.${extension}`);
+  return element.default;
+}
+
+async function setUpperCardBackgroundGif(weatherStatus) {
+  const upperCard = document.querySelector(".upper-card");
+  const background = await dynamicImport(weatherStatus, "gif");
+  console.log(upperCard.style);
+  upperCard.style.backgroundImage = `url("${background}")`;
+  upperCard.style.backgroundSize = "cover";
+}
+
+async function setUpperCardIcon(weatherStatus) {
+  const iconDiv = document.querySelector(".icon");
+  const icon = await dynamicImport(weatherStatus, "svg");
+  iconDiv.innerHTML = icon;
+}
