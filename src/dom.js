@@ -84,10 +84,27 @@ function createCarouselDOM() {
   carouselDiv.className = "carousel";
 
   for(let i = 0; i < 4; ++i) {
-    const carouselElement = document.createElement("div");
-    carouselElement.className = "carousel-element";
-    carouselDiv.appendChild(carouselElement);
+    carouselDiv.appendChild(createCarouselItemDOM());
   }
   return carouselDiv;
+}
+
+function createCarouselItemDOM() {
+  const item = document.createElement("div");
+  item.className = "carousel-item";
+
+  const datetime = document.createElement("div");
+  datetime.className = "item-date";
+
+  const icon = document.createElement("div");
+  icon.className = "item-icon";
+
+  const temp = document.createElement("div");
+  temp.className = "item-temp";
+
+  item.appendChild(datetime);
+  item.appendChild(icon);
+  item.appendChild(temp);
+  return item;
 }
 

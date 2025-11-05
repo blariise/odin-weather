@@ -7,16 +7,36 @@ import createCardDOM from "./dom.js";
   let weatherData = undefined;
   search.addEventListener("keydown", async (event) => {
     if (event.key == "Enter" && search.value !== "") {
+      renderLoadingIcon();
       weatherData = await fetchWeather(search.value);
+      
+      const checkForCardDOM = document.querySelector(".day-card");
+      if (checkForCardDOM) {
+        clearCardDOM();
+      }
       search.value = "";
       console.log(weatherData);
+
       const cardDOM = renderCardDOM();
       cardDOM.style.visibility = "hidden";
-      await renderWeatherData(weatherData.currentConditions, weatherData.resolvedAddress);
+      await renderWeatherData(weatherData, weatherData.resolvedAddress, -1);
+      clearLoadingIcon();
       cardDOM.style.visibility = "visible";
     }
   });
 })();
+
+function renderLoadingIcon() {
+  const loadingDiv = document.createElement("div");
+  loadingDiv.className = "loading";
+  const container = document.querySelector(".weather-container");
+  container.appendChild(loadingDiv);
+}
+
+function clearLoadingIcon() {
+  const loadingDiv = document.querySelector(".loading");
+  loadingDiv.remove();
+}
 
 function clearCardDOM() {
   const cardDiv = document.querySelector(".day-card");
@@ -36,7 +56,6 @@ function renderCardDOM() {
 }
 
 async function renderUpperCard(weatherData, place) {
-
   await setUpperCardBackgroundGif(weatherData.icon);
   await setUpperCardIcon(weatherData.icon);
 
@@ -44,7 +63,7 @@ async function renderUpperCard(weatherData, place) {
   dateDiv.innerText = weatherData.datetime;
 
   const temperature = document.querySelector(".temperature");
-  temperature.innerText = `${weatherData.temp} °C`;
+  temperature.innerText = `${weatherData.temp}°C`;
 
   const placeDiv = document.querySelector(".place");
   placeDiv.innerText = place;
@@ -100,9 +119,12 @@ async function renderInfo(weatherData) {
   });
 }
 
-async function renderWeatherData(weatherData, place) {
-  await renderUpperCard(weatherData, place);
-  await renderInfo(weatherData);
+async function renderWeatherData(weatherData, place, time) {
+  if (time === -1) {
+    await renderUpperCard(weatherData.currentConditions, place);
+    await renderInfo(weatherData.currentConditions);
+    await renderCarousel(weatherData.days);
+  }
 }
 
 async function dynamicImport(weatherStatus, extension) {
@@ -133,4 +155,32 @@ async function setUpperCardIcon(weatherStatus) {
   const iconDiv = document.querySelector(".icon");
   const icon = await dynamicImport(weatherStatus, "svg");
   iconDiv.innerHTML = icon;
+}
+
+function renderCarousel(weatherData) {
+  const carousel = document.querySelectorAll(".carousel-item");
+  let index = 0;
+  carousel.forEach((element) => {
+    const weather = weatherData[index];
+    renderIconCarousel(element, weather.icon);
+    renderDateCarousel(element, weather.datetime);
+    renderTempCarousel(element, weather.temp);
+    ++index;
+  });
+}
+
+async function renderIconCarousel(element, iconText) {
+  const iconDiv = element.querySelector(".item-icon");
+  const icon = await dynamicImport(iconText, "svg");
+  iconDiv.innerHTML = icon;
+}
+
+function renderDateCarousel(element, datetime) {
+  const dateDiv = element.querySelector(".item-date");
+  dateDiv.innerText = datetime;
+}
+
+function renderTempCarousel(element, temp) {
+  const tempDiv = element.querySelector(".item-temp");
+  tempDiv.innerText = `${temp}°C`;
 }
